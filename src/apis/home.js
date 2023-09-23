@@ -20,3 +20,10 @@ export function getHotAPI() {
         url: '/home/hot'
     })
 }
+
+//获取所有商品模块API
+export const getGoodsAPI = () => {
+    return httpInstance({
+      url: '/home/goods'
+    })
+  }
