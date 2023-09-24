@@ -11,5 +11,7 @@
 <style scoped lang="scss">
 .test {
   color: $priceColor;
+  height: 100px;
+  background-color: pink;
 }
 </style>
