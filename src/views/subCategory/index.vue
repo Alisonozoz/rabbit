@@ -47,7 +47,7 @@ const load = async () => {
   const res = await getSubCategoryAPI(reqData.value)
   goodsList.value = [...goodsList.value, ...res.result.items]
   //停止加载
-  if (res.result.items === []) {
+  if (res.result.items == []) {
     disabled.value = true
   }
 }
