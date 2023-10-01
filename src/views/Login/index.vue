@@ -31,6 +31,16 @@ const rules = ref({
   ]
 })
 
+//获取form示例做统一校验
+const formRef = ref(null)
+const doLogin = () => {
+  //调用实例方法
+  formRef.value.validate((valid) => {
+    console.log(valid)
+  })
+}
+
+
 </script>
 
 
@@ -55,7 +65,7 @@ const rules = ref({
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form :model="userInfo" :rules="rules" label-position="right" label-width="60px"
+            <el-form ref="formRef" :model="userInfo" :rules="rules" label-position="right" label-width="60px"
               status-icon>
               <el-form-item  label="账户" prop="account">
                 <el-input v-model="userInfo.account"/>
@@ -68,7 +78,7 @@ const rules = ref({
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
