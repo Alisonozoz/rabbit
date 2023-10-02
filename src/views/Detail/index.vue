@@ -3,39 +3,69 @@ import { getDetailAPI } from '@/apis/detail'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import DetailHot from '@/views/Detail/components/DetailHot.vue'
+import { ElMessage } from 'element-plus'
+import { useCartStore } from '@/stores/cart'
 
 
-
-const detailList = ref({})
+const goods = ref({})
 const route = useRoute()
 const getDetail = async () => {
   const res = await getDetailAPI(route.params.id)
-  detailList.value = res.result
+  console.log(res)
+  goods.value = res.result
 }
 
 onMounted(() => {
   getDetail()
 })
 
-
+let skuObject = {}
 //sku规格被操作时
 const skuChange = (sku) => {
   console.log(sku)
+  skuObject = sku
+}
+
+//数据组件
+const count = ref(1)
+const countChange = (count) => {
+  count++
+  console.log(count)
+}
+
+const cartStore = useCartStore()
+//添加购物车
+const addCart = () => {
+  if(skuObject.skuId) {
+    //商品规格已经选择 出发action函数
+    cartStore.addCart({
+      id: goods.value.id,
+      name: goods.value.name,
+      picture: goods.value.mainPictures[0],
+      price: goods.value.price,
+      count: count.value,
+      skuId: skuObject.skuId,
+      attrsText: skuObject.specsText
+    })
+  }else{
+    //商品规格没有选择 提示用户选择
+    ElMessage.warning('请选择规格')
+  }
 }
 </script>
 
 <template>
   <div class="xtx-goods-page">
-    <div class="container" v-if="detailList.details">
+    <div class="container" v-if="goods.details">
       <div class="bread-container">
       <!-- 面包屑导航 -->
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${detailList.categories[1].id}` }">{{ detailList.categories[1].name }}
+          <el-breadcrumb-item :to="{ path: `/category/${goods.categories[1].id}` }">{{ goods.categories[1].name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/sub/${detailList.categories[0].id}` }">{{ detailList.categories[0].name }}
+          <el-breadcrumb-item :to="{ path: `/category/sub/${goods.categories[0].id}` }">{{ goods.categories[0].name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item>{{ detailList.name }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ goods.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -44,38 +74,38 @@ const skuChange = (sku) => {
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-              <ImageView :imageList="detailList.mainPictures"></ImageView>
+              <ImageView :imageList="goods.mainPictures"></ImageView>
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
                   <p>销量人气</p>
-                  <p> {{ detailList.salesCount }}+ </p>
+                  <p> {{ goods.salesCount }}+ </p>
                   <p><i class="iconfont icon-task-filling"></i>销量人气</p>
                 </li>
                 <li>
                   <p>商品评价</p>
-                  <p>{{ detailList.commentCount }}+</p>
+                  <p>{{ goods.commentCount }}+</p>
                   <p><i class="iconfont icon-comment-filling"></i>查看评价</p>
                 </li>
                 <li>
                   <p>收藏人气</p>
-                  <p>{{ detailList.collectCount }}+</p>
+                  <p>{{ goods.collectCount }}+</p>
                   <p><i class="iconfont icon-favorite-filling"></i>收藏商品</p>
                 </li>
                 <li>
                   <p>品牌信息</p>
-                  <p>{{ detailList.brand.name }}+</p>
+                  <p>{{ goods.brand.name }}+</p>
                   <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                 </li>
               </ul>
             </div>
             <div class="spec">
               <!-- 商品信息区 -->
-              <p class="g-name"> {{ detailList.name }} </p>
-              <p class="g-desc">{{ detailList.desc }} </p>
+              <p class="g-name"> {{ goods.name }} </p>
+              <p class="g-desc">{{ goods.desc }} </p>
               <p class="g-price">
-                <span>{{ detailList.price }}</span>
-                <span>{{ detailList.oldPrice }}</span>
+                <span>{{ goods.price }}</span>
+                <span>{{ goods.oldPrice }}</span>
               </p>
               <div class="g-service">
                 <dl>
@@ -93,12 +123,12 @@ const skuChange = (sku) => {
                 </dl>
               </div>
               <!-- sku组件 -->
-              <XtxSku :goods="detailList" @change="skuChange"></XtxSku>
+              <XtxSku :goods="goods" @change="skuChange"></XtxSku>
               <!-- 数据组件 -->
-
+              <el-input-number v-model="count"  @change="countChange" />
               <!-- 按钮组件 -->
               <div>
-                <el-button size="large" class="btn">
+                <el-button size="large" class="btn" @click="addCart">
                   加入购物车
                 </el-button>
               </div>
@@ -115,13 +145,13 @@ const skuChange = (sku) => {
                 <div class="goods-detail">
                   <!-- 属性 -->
                   <ul class="attrs">
-                    <li v-for="item in detailList.details.properties" :key="item.value">
+                    <li v-for="item in goods.details.properties" :key="item.value">
                       <span class="dt">{{ item.name }}</span>
                       <span class="dd">{{ item.value }}</span>
                     </li>
                   </ul>
                   <!-- 图片 -->
-                  <img v-for="img in detailList.details.pictures" :src="img" :key="img">
+                  <img v-for="img in goods.details.pictures" :src="img" :key="img">
                 </div>
               </div>
             </div>
