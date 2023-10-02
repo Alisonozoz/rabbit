@@ -8,8 +8,8 @@ import { userUserStore } from '@/stores/user'
 const userStore = userUserStore()
 //表单数据对象
 const userInfo = ref({
-  account: '',
-  password: '',
+  account: 'heima282',
+  password: 'hm#qd@23!',
   agree: true
 })
 
