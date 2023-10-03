@@ -78,6 +78,11 @@ export const useCartStore = defineStore('cart', () => {
         cartList.value.forEach((item) => item.selected = selected)
     }
 
+    //退出登录后清空购物车数据
+    const clearCart = () => {
+        cartList.value = []
+    }
+
     return {
         cartList,
         allCount,
@@ -88,7 +93,8 @@ export const useCartStore = defineStore('cart', () => {
         addCart,
         delCart,
         singleCheck,
-        allCheck
+        allCheck,
+        clearCart
     }
 },
 {
