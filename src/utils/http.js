@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
-import { userUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 import { useRouter } from "vue-router"
 
 const httpInstance = axios.create({
@@ -11,7 +11,7 @@ const httpInstance = axios.create({
 
 // axios请求拦截器
 httpInstance.interceptors.request.use(config => {
-    const userStore = userUserStore()
+    const userStore = useUserStore()
     //1、从pinia中获取token数据
     const token = userStore.userInfo.token
     //2、按照后端的要求拼接token数据
@@ -26,7 +26,7 @@ httpInstance.interceptors.request.use(config => {
     //错误统一提示
     ElMessage({type: 'warning', message: e.response.data.message})
     //401token失效处理
-    const userStore = userUserStore()
+    const userStore = useUserStore()
     const router = useRouter()
     //1、清除用户信息
     userStore.clearUserInfo()

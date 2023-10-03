@@ -3,9 +3,9 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import { useRouter } from 'vue-router'
-import { userUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 
-const userStore = userUserStore()
+const userStore = useUserStore()
 //表单数据对象
 const userInfo = ref({
   account: 'heima282',

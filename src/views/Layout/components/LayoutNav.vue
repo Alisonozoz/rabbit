@@ -1,8 +1,8 @@
 <script setup>
-import { userUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
-const userStore = userUserStore()
+const userStore = useUserStore()
 const router = useRouter()
 const confirm = () => {
   //退出登录业务逻辑实现
