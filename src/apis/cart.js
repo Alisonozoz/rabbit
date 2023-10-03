@@ -18,3 +18,14 @@ export const updateNewListAPI = () => {
         url: '/member/cart'
     })
 }
+
+//删除购物车商品
+export const delCartAPI = (ids) => {
+    return request({
+        url: '/member/cart',
+        method: 'DELETE',
+        data: {
+            ids
+        }
+    })
+}

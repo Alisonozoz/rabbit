@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
-import { useUserStore } from './user'
-import { insertCartAPI, updateNewListAPI } from '@/apis/cart'
+import { useUserStore } from './userStore'
+import { insertCartAPI, updateNewListAPI, delCartAPI } from '@/apis/cart'
 
 export const useCartStore = defineStore('cart', () => {
     const userStore = useUserStore()
@@ -9,6 +9,12 @@ export const useCartStore = defineStore('cart', () => {
     console.log(isLogin,'111')
     //1、定义state —购物车数据
     const cartList = ref([])
+
+    const updateNewList =async  () => {
+        const res =  await updateNewListAPI()
+        cartList.value = res.result
+    }
+
     //2、定义action —加入购物车
     const addCart = async (goods) => {
         console.log(goods,'加入购物车')
@@ -19,9 +25,8 @@ export const useCartStore = defineStore('cart', () => {
             //1、调用登录后的购物车接口
             await insertCartAPI(skuId, count)
             //2、调用登陆后的购物车列表接口
-            const res =  await updateNewListAPI()
             //3、覆盖本地购物车列表
-            cartList.value = res.result
+            updateNewList()
         }else{
             const item = cartList.value.find((item) => goods.skuId === item.skuId )
             //已经添加过则count+1
@@ -35,13 +40,20 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     //删除购物车的商品
-    const delCart = (skuId) => {
-      // 思路方法：
-      // 1. 找到要删除项的下标值 - splice
-      // 2. 使用数组的过滤方法 - filter
-      const index = cartList.value.findIndex((item) => skuId === item.skuId)
-      cartList.value.splice(index, 1)
+    const delCart = async (skuId) => {
+        if(isLogin.value) {
+            //登录后删除购物车商品逻辑
+            await delCartAPI([skuId])
+            updateNewList()
+        }else{
+            // 思路方法：
+            // 1. 找到要删除项的下标值 - splice
+            // 2. 使用数组的过滤方法 - filter
+            const index = cartList.value.findIndex((item) => skuId === item.skuId)
+            cartList.value.splice(index, 1)
+        }
     }
+
     //计算属性
     //总的数量
     const allCount = computed(() => cartList.value.reduce((a, c) => a + c.count, 0))
