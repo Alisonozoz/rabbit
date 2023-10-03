@@ -45,7 +45,8 @@ const addCart = () => {
       price: goods.value.price,
       count: count.value,
       skuId: skuObject.skuId,
-      attrsText: skuObject.specsText
+      attrsText: skuObject.specsText,
+      selected: true
     })
   }else{
     //商品规格没有选择 提示用户选择

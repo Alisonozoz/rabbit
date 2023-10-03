@@ -6,6 +6,7 @@ export const useCartStore = defineStore('cart', () => {
     const cartList = ref([])
     //2、定义action —加入购物车
     const addCart = (goods) => {
+        console.log(goods,'加入购物车')
         const item = cartList.value.find((item) => goods.skuId === item.skuId )
         //已经添加过则count+1
         if(item) {
@@ -29,12 +30,19 @@ export const useCartStore = defineStore('cart', () => {
     const allCount = computed(() => cartList.value.reduce((start, item) => start + item.count, 0))
     //总的价钱
     const allPrice = computed(() => cartList.value.reduce((start, item) => start + item.count * item.price, 0))
+
+    //单选框
+    const singleCheck = (skuId, selected) => {
+        const item = cartList.value.find((item) => item.skuId === skuId)
+        item.selected = selected
+    }
     return {
         cartList,
         addCart,
         delCart,
         allCount,
-        allPrice
+        allPrice,
+        singleCheck
     }
 },
 {
