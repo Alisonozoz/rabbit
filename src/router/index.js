@@ -9,6 +9,9 @@ import CartList from '@/views/CartList/index.vue'
 import Checkout from '@/views/Checkout/index.vue'
 import Pay from '@/views/Pay/index.vue'
 import payBack from '@/views/Pay/payBack.vue'
+import Member from '@/views/Member/index.vue'
+import userInfo from '@/views/Member/components/userInfo.vue'
+import userOrder from '@/views/Member/components/userOrder.vue'
 
 
 const router = createRouter({
@@ -16,54 +19,58 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'layout',
       component: Layout,
       children: [
         {
           path: '',
-          name: 'home',
           component: Home
         },
         {
-          path: '/category/:id',
-          name: 'category',
+          path: 'category/:id',
           component: Category
         },
         {
-          path: '/category/sub/:id',
-          name: 'subcategory',
+          path: 'category/sub/:id',
           component: subCategory
         },
         {
-          path: '/detail/:id',
-          name: 'detail',
+          path: 'detail/:id',
           component: Detail
         },
         {
-          path: '/cartlist',
-          name: 'cartlist',
+          path: 'cartlist',
           component: CartList
         },
         {
-          path: '/checkout',
-          name: 'checkout',
+          path: 'checkout',
           component: Checkout
         },
         {
-          path: '/pay',
-          name: 'pay',
+          path: 'pay',
           component: Pay
         },
         {
-          path: '/paycallback',
-          name: 'payBack',
+          path: 'paycallback',
           component: payBack
+        },
+        {
+          path: 'member',
+          component: Member,
+          children: [
+            {
+              path: 'user',
+              component: userInfo
+            },
+            {
+              path: 'order',
+              component: userOrder
+            }
+          ]
         }
       ]
     },
     {
       path: '/login',
-      name: 'login',
       component: Login
     },
   ],
